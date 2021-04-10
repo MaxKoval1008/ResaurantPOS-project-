@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'pos.apps.PosConfig',
     'drf_spectacular',
     'rest_framework',
+    'pos'
 ]
 
 REST_FRAMEWORK = {
