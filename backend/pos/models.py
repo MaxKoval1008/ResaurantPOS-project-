@@ -12,7 +12,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank= True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=100)
     description = models.TextField(max_length=500, blank=True, null=True)
     image = models.ImageField(blank=True, null=True)
@@ -24,14 +24,13 @@ class Product(models.Model):
 
 class OrderItem(models.Model):
     product = models.CharField(Product, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
     start_time = models.DateTimeField(default=timezone.now)
     count = models.PositiveIntegerField
     total_price = models.DecimalField
     is_ready = models.BooleanField(default=None)
 
     def __str__(self):
-        return self.name
+        return f'{self.product.name} {self.count}'
 
 
 class Table(models.Model):
