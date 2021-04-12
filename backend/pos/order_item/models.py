@@ -3,8 +3,8 @@ from django.utils import timezone
 from ..product.models import Product
 
 
-class OrderItem(models.Model):
-    product = models.CharField(Product, on_delete=models.CASCADE)
+class Order_item(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
     start_time = models.DateTimeField(default=timezone.now)
     count = models.PositiveIntegerField
     total_price = models.DecimalField

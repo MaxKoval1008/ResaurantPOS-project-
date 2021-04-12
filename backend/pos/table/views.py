@@ -6,5 +6,20 @@ from .serializers import TableSerializer
 
 
 class TableCreateView(CreateAPIView):
-    queryset = Table.object.all()
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+
+class TableDeleteView(DestroyAPIView):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+
+class TableUpdateView(UpdateAPIView):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+
+class TableListView(ListAPIView):
+    queryset = Table.objects.all()
     serializer_class = TableSerializer

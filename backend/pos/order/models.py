@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from ..order_item.models import OrderItem
+from ..order_item.models import Order_item
 from ..table.models import Table
 
 
@@ -17,10 +17,10 @@ class Order(models.Model):
     ]
 
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
-    order_item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
+    order_item = models.ForeignKey(Order_item, on_delete=models.CASCADE)
     start_time = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=None)
-    discount_choice = models.CharField(choices=DISCOUNT, default=None, blank=True, null=True)
+    discount_choice = models.CharField(choices=DISCOUNT, default=None, blank=True, null=True, max_length=25)
     total_order_cost = models.DecimalField
 
     def __str__(self):
