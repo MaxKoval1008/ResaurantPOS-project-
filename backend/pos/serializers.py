@@ -1,82 +1,51 @@
 from rest_framework import serializers
-
-from .models.category import Category
 from .models.order import Order
 from .models.order_item import OrderItem
-from .models.product import Product
-from .models.table import Table
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
-
-class TableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Table
-        fields = '__all__'
-
-
-class CookerOrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField(read_only=True)
-    order = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = OrderItem
-        fields = ['id', 'product', 'order', 'start_time', 'count', 'is_ready']
-        read_only_fields = ['id', 'product', 'order', 'start_time', 'count']
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer
 
     class Meta:
         model = OrderItem
-        fields = '__all__'
-        total_cost = serializers.ReadOnlyField()
+        fields = ('product', 'start_time', 'is_ready')
 
+'''
+OrderCreateUpdateSerializer helps to create/update order with one or many order items
+TEST VERSION
+NOT ALL FIELDS SERIALIZED. Used default values. 
 
-class OrderItemCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        exclude = ('order',)
-
-
-class OrderSerializer(serializers.ModelSerializer):
-    table = TableSerializer
-    order_item = OrderItemCreateSerializer(many=True)
+TODO:
+add all fields
+'''
+class OrderCreateUpdateSerializer(serializers.ModelSerializer):
+    order_item = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ('table','start_time','is_active','order_item',)
 
     def create(self, validated_data):
-        data = validated_data.pop('order_item')
+        order_items = validated_data.pop('order_item')
         order = Order.objects.create(**validated_data)
-        for order_item_data in data:
-            OrderItem.objects.create(order=order, **order_item_data)
+        for item in order_items:
+            OrderItem.objects.create(order=order, **item)
+
         return order
 
-    def update(self, validated_data, **kwargs):
-        data = validated_data.pop('order_item')
-        order = Order.objects.create(**validated_data)
-        for order_item_data in data:
-            OrderItem.objects.create(order=order, **order_item_data)
-        return order
+    def update(self, instance, validated_data):
+        order_items_data = validated_data.pop('order_item')
+        order = instance.order_item.all()
+        order = list(order)
+        instance.table = validated_data.get('table', instance.table)
+        instance.start_time = validated_data.get('start_time', instance.start_time)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.save()
+        for item in order_items_data:
+            order_item = order.pop(0)
+            order_item.name = item.get('name', order_item.name)
+            order_item.product = item.get('product', order_item.product)
+            order_item.start_time = item.get('start_time', order_item.start_time)
+            order_item.is_ready = item.get('is_ready', order_item.is_ready)
+            order_item.save()
+        return instance
 
-
-class WaiterOrderItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(many=True)
-    order = OrderSerializer
-
-    class Meta:
-        model = OrderItem
-        fields = '__all__'
