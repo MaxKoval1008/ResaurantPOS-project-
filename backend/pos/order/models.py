@@ -1,7 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from ..order_item.models import Order_item
-from ..table.models import Table
 
 
 class Order(models.Model):
@@ -16,8 +14,7 @@ class Order(models.Model):
         (DISCOUNT_50, 'PERSONAL')
     ]
 
-    table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='table')
-    order_item = models.ManyToManyField(Order_item)
+    table = models.ForeignKey(to='pos_label.Table', on_delete=models.CASCADE, related_name='table')
     start_time = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     discount_choice = models.CharField(choices=DISCOUNT, default=None, blank=True, null=True, max_length=25)
