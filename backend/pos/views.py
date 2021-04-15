@@ -1,8 +1,6 @@
-from rest_framework.generics import CreateAPIView,UpdateAPIView
-from rest_framework.response import Response
-from .models.order_item import OrderItem
-from .models.order import Order
-from .serializers import OrderCreateUpdateSerializer, OrderItemSerializer
+from rest_framework.generics import CreateAPIView
+
+from .serializers import *
 
 '''
 TEST VERSION OF VIEWS FOR ORDER AND ORDER ITEM
@@ -23,3 +21,4 @@ class OrderItemView(CreateAPIView):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
     lookup_field = 'order'
+

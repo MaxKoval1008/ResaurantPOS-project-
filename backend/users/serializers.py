@@ -12,6 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
             phone_number=validated_data['phone_number'], is_cooker=validated_data['is_cooker'],
             is_staff=validated_data['is_staff'], is_admin=validated_data['is_admin']
         )
+        if validated_data['is_admin']:
+            user.is_waiter = False
+            user.is_cooker = False
+            user.role = 1
+        elif validated_data['is_waiter']:
+            user.is_cooker = False
+            user.role = 2
+        elif validated_data['is_cooker']:
+            user.role = 3
         user.set_password(validated_data['password'])
         user.save()
         return user
@@ -19,5 +28,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('email', 'password', 'first_name', 'last_name', 'phone_number',
-                  'is_waiter', 'is_cooker', 'is_staff', 'is_admin'
+                  'is_admin', 'is_waiter', 'is_cooker', 'is_staff'
+                  )
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'first_name', 'last_name', 'phone_number',
+
                   )

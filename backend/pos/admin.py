@@ -5,12 +5,8 @@ from .models.order_item import OrderItem
 from .models.product import Product
 from .models.table import Table
 
-
-
-
 admin.site.register(Order)
 admin.site.register(Category)
 admin.site.register(OrderItem)
 admin.site.register(Product)
 admin.site.register(Table)
-# Register your models here.

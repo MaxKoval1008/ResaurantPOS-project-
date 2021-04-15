@@ -1,7 +1,4 @@
-from django.urls import  include, path
-from .views import OrderView, OrderItemView
-
-
+from django.urls import include, path
 from .views import OrderView, OrderItemView
 
 app_name = 'users'
