@@ -18,17 +18,9 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
     start_time = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=None)
-    discount_choice = models.CharField(choices=DISCOUNT,max_length=3, default=None, blank=True, null=True)
-    total_order_cost = models.DecimalField(max_digits=7,decimal_places=2,default=0)
+    discount_choice = models.CharField(choices=DISCOUNT, max_length=3, default=None, blank=True, null=True)
+    total_order_cost = models.DecimalField(max_digits=7, decimal_places=2,default=0)
 
     def __str__(self):
         return f'Order №{self.pk}'
 
-    '''
-    Setting reverse relations to order_item model
-    
-    def order_item(self):
-         if not hasattr(self, '_order_item'):
-             self._order_item = self.order_item
-         return self._order_item
-    '''

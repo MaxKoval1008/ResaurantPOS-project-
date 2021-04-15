@@ -20,12 +20,15 @@ INSTALLED_APPS = [
     'users',
     'drf_spectacular',
     'rest_framework',
+    'django_filters'
 
 
 
 ]
 AUTH_USER_MODEL = 'users.CustomUser'
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "restaurantPOS.exception_handler.handle_exception",
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

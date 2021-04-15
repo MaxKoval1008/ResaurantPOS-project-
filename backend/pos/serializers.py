@@ -1,13 +1,16 @@
 from rest_framework import serializers
 from .models.order import Order
 from .models.order_item import OrderItem
+from .models.product import Product
+from .models.table import Table
+from .models.category import Category
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = OrderItem
         fields = ('product', 'start_time', 'is_ready')
+
 
 '''
 OrderCreateUpdateSerializer helps to create/update order with one or many order items
@@ -17,12 +20,14 @@ NOT ALL FIELDS SERIALIZED. Used default values.
 TODO:
 add all fields
 '''
+
+
 class OrderCreateUpdateSerializer(serializers.ModelSerializer):
     order_item = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = ('table','start_time','is_active','order_item',)
+        fields = ['table', 'start_time', 'is_active', 'order_item', ]
 
     def create(self, validated_data):
         order_items = validated_data.pop('order_item')
@@ -48,4 +53,3 @@ class OrderCreateUpdateSerializer(serializers.ModelSerializer):
             order_item.is_ready = item.get('is_ready', order_item.is_ready)
             order_item.save()
         return instance
-
