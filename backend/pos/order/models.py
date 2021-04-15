@@ -16,10 +16,10 @@ class Order(models.Model):
         (DISCOUNT_50, 'PERSONAL')
     ]
 
-    table = models.ForeignKey(Table, on_delete=models.CASCADE)
-    order_item = models.ForeignKey(Order_item, on_delete=models.CASCADE)
+    table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='table')
+    order_item = models.ManyToManyField(Order_item)
     start_time = models.DateTimeField(default=timezone.now)
-    is_active = models.BooleanField(default=None)
+    is_active = models.BooleanField(default=True)
     discount_choice = models.CharField(choices=DISCOUNT, default=None, blank=True, null=True, max_length=25)
     total_order_cost = models.DecimalField
 
