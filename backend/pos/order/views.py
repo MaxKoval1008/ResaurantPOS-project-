@@ -6,37 +6,22 @@ from .models import Order
 from .serializers import WaiterSerializer
 
 
-# class OrderCreateView(CreateAPIView):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializer
-#
-#
-# class OrderDeleteView(DestroyAPIView):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializer
-#
-#
-# class OrderUpdateView(UpdateAPIView):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializer
-#
-#
-# class OrderListView(ListAPIView):
-#     queryset = Order.objects.all()
-#     serializer_class = OrderSerializer
+class OrderActiveListView(ListAPIView):
+    queryset = Order.objects.filter(is_active='True').order_by('table')
+    serializer_class = WaiterSerializer
 
 
-class WaiterListView(ListAPIView):
+class OrderNotActiveListView(ListAPIView):
+    queryset = Order.objects.filter(is_active='False').order_by('start_time')
+    serializer_class = WaiterSerializer
+
+
+class OrderCreateView(CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = WaiterSerializer
 
 
-class WaiterCreateView(CreateAPIView):
-    queryset = Order.objects.all()
-    serializer_class = WaiterSerializer
-
-
-class WaiterUpdateView(mixins.UpdateModelMixin,
+class OrderUpdateView(mixins.UpdateModelMixin,
                     GenericAPIView):
     queryset = Order.objects.all()
     serializer_class = WaiterSerializer

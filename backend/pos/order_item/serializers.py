@@ -13,7 +13,10 @@ class CookerSerializer(serializers.ModelSerializer):
 
 
 class WaiterSerializer(serializers.ModelSerializer):
+    product = serializers.StringRelatedField()
+    order = serializers.StringRelatedField()
 
     class Meta:
         model = Order_item
         fields = '__all__'
+        read_only_fields = ['id', 'total_price', 'is_ready']

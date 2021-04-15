@@ -9,11 +9,17 @@ from .table.views import *
 app_name = 'pos'
 
 urlpatterns = [
-    path('cooker/list/all', CookerListView.as_view()),
-    path('cooker/list/ready', CookerReadyListView.as_view()),
-    path('cooker/list/not_ready', CookerNotReadyListView.as_view()),
-    path('cooker/update/<int:pk>', CookerUpdateView.as_view()),
-    path('waiter/create', WaiterCreateView.as_view()),
-    path('waiter/list', WaiterListView.as_view()),
-    path('waiter/update/<int:pk>', WaiterUpdateView.as_view()),
+    path('cooker/order_item/list/all', Order_itemListView.as_view()),
+    path('cooker/order_item/list/ready', Order_itemReadyListView.as_view()),
+    path('cooker/order_item/list/not_ready', Order_itemNotReadyListView.as_view()),
+    path('cooker/order_item/update/<int:pk>', Order_itemUpdateView.as_view()),
+    path('waiter/order_item/create/', Order_itemCreateView.as_view()),
+    path('waiter/order_item/list/all', Order_itemListView.as_view()),
+    path('waiter/order_item/list/ready', Order_itemReadyListView.as_view()),
+    path('waiter/order_item/list/not_ready', Order_itemNotReadyListView.as_view()),
+    path('waiter/order_item/update/<int:pk>', Order_itemUpdateView.as_view()),
+    path('waiter/order/create', OrderCreateView.as_view()),
+    path('waiter/order/list/active', OrderActiveListView.as_view()),
+    path('waiter/order/list/not_active', OrderNotActiveListView.as_view()),
+    path('waiter/order/update/<int:pk>', OrderUpdateView.as_view()),
     ]

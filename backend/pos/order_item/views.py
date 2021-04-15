@@ -5,48 +5,45 @@ from rest_framework.generics import (
 from rest_framework.response import Response
 
 from .models import Order_item
-from .serializers import CookerSerializer
+from .serializers import CookerSerializer, WaiterSerializer
 
 
-# class Order_itemCreateView(CreateAPIView):
-#     queryset = Order_item.objects.all()
-#     serializer_class = Order_itemSerializer
-#
-#
-# class Order_itemDeleteView(DestroyAPIView):
-#     queryset = Order_item.objects.all()
-#     serializer_class = Order_itemSerializer
-#
-#
-# class Order_itemUpdateView(UpdateAPIView):
-#     queryset = Order_item.objects.all()
-#     serializer_class = Order_itemSerializer
-#
-#
-# class Order_itemListView(ListAPIView):
-#     queryset = Order_item.objects.all()
-#     serializer_class = Order_itemSerializer
-
-
-class CookerListView(ListAPIView):
+class Order_itemListView(ListAPIView):
     queryset = Order_item.objects.order_by('-start_time')
+    #if waiter:
+    #serializer_class = WaiterSerializer
+    #elif cooker:
     serializer_class = CookerSerializer
 
 
-class CookerReadyListView(ListAPIView):
+class Order_itemReadyListView(ListAPIView):
     queryset = Order_item.objects.filter(is_ready='True').order_by('-start_time')
+    #if waiter:
+    #serializer_class = WaiterSerializer
+    #elif cooker:
     serializer_class = CookerSerializer
 
 
-class CookerNotReadyListView(ListAPIView):
+class Order_itemNotReadyListView(ListAPIView):
     queryset = Order_item.objects.filter(is_ready='False').order_by('-start_time')
+    #if waiter:
+    #serializer_class = WaiterSerializer
+    #elif cooker:
     serializer_class = CookerSerializer
 
 
-class CookerUpdateView(mixins.UpdateModelMixin,
+class Order_itemUpdateView(mixins.UpdateModelMixin,
                     GenericAPIView):
     queryset = Order_item.objects.all()
+    #if waiter:
+    #serializer_class = WaiterSerializer
+    #elif cooker:
     serializer_class = CookerSerializer
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
+
+class Order_itemCreateView(CreateAPIView):
+    queryset = Order_item.objects.all()
+    serializer_class = WaiterSerializer
