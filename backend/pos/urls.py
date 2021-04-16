@@ -1,32 +1,47 @@
 from django.urls import path
 
-from .category.views import *
-from .order.views import *
-from .order_item.views import *
-from .product.views import *
-from .table.views import *
+from .views import *
 
 app_name = 'pos'
 
+
 urlpatterns = [
-    path('category/create', CategoryCreateView.as_view()),
-    path('category/delete', CategoryDeleteView.as_view()),
-    path('category/update', CategoryUpdateView.as_view()),
-    path('category/list', CategoryListView.as_view()),
-    path('order/create', OrderCreateView.as_view()),
-    path('order/delete', OrderCreateView.as_view()),
-    path('order/update', OrderCreateView.as_view()),
-    path('order/list', OrderCreateView.as_view()),
-    path('order_item/create', Order_itemCreateView.as_view()),
-    path('order_item/delete', Order_itemDeleteView.as_view()),
-    path('order_item/update', Order_itemUpdateView.as_view()),
-    path('order_item/list', Order_itemListView.as_view()),
-    path('product/create', ProductCreateView.as_view()),
-    path('product/delete', ProductDeleteView.as_view()),
-    path('product/update', ProductUpdateView.as_view()),
-    path('product/list', ProductListView.as_view()),
-    path('table/create', TableCreateView.as_view()),
-    path('table/delete', TableDeleteView.as_view()),
-    path('table/update', TableUpdateView.as_view()),
-    path('table/list', TableListView.as_view()),
+    path('admin/category/create/', CategoryCreateView.as_view()),
+    path('admin/category/list/', CategoryListView.as_view()),
+    path('admin/category/update/', CategoryUpdateView.as_view()),
+    path('admin/category/delete/', CategoryDeleteView.as_view()),
+    path('admin/order/create/', OrderCreateView.as_view()),
+    path('admin/order/list/active', OrderActiveListView.as_view()),
+    path('admin/order/list/not_active', OrderNotActiveListView.as_view()),
+    path('admin/order/update/', OrderUpdateView.as_view()),
+    path('admin/order/delete/', OrderDeleteView.as_view()),
+    path('admin/order_item/create/', OrderItemCreateView.as_view()),
+    path('admin/order_item/list/all', OrderItemListView.as_view()),
+    path('admin/order_item/list/ready', OrderItemReadyListView.as_view()),
+    path('admin/order_item/list/not_ready', OrderItemNotReadyListView.as_view()),
+    path('admin/order_item/update/<int:pk>', OrderItemUpdateView.as_view()),
+    path('admin/order_item/delete/', OrderItemDeleteView.as_view()),
+    path('admin/product/create/', ProductCreateView.as_view()),
+    path('admin/product/list/', ProductListView.as_view()),
+    path('admin/product/update/', ProductUpdateView.as_view()),
+    path('admin/product/delete/', ProductDeleteView.as_view()),
+    path('admin/table/create/', TableCreateView.as_view()),
+    path('admin/table/list/', TableListView.as_view()),
+    path('admin/table/update/', TableUpdateView.as_view()),
+    path('admin/table/delete/', TableDeleteView.as_view()),
+
+    path('cooker/order_item/list/all', OrderItemListView.as_view()),
+    path('cooker/order_item/list/ready', OrderItemReadyListView.as_view()),
+    path('cooker/order_item/list/not_ready', OrderItemNotReadyListView.as_view()),
+    path('cooker/order_item/update/<int:pk>', OrderItemUpdateView.as_view()),
+
+    path('waiter/order_item/create/', OrderItemCreateView.as_view()),
+    path('waiter/order_item/list/all', OrderItemListView.as_view()),
+    path('waiter/order_item/list/ready', OrderItemReadyListView.as_view()),
+    path('waiter/order_item/list/not_ready', OrderItemNotReadyListView.as_view()),
+    path('waiter/order_item/update/<int:pk>', OrderItemUpdateView.as_view()),
+    path('waiter/order/create', OrderCreateView.as_view()),
+    path('waiter/order/list/active', OrderActiveListView.as_view()),
+    path('waiter/order/list/not_active', OrderNotActiveListView.as_view()),
+    path('waiter/order/update/<int:pk>', OrderUpdateView.as_view()),
     ]
