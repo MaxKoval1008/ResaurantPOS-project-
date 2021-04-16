@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import CustomUser
 
+from django.contrib.auth import password_validation
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True, allow_blank=False, write_only=True)
@@ -38,3 +40,28 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ('email', 'first_name', 'last_name', 'phone_number',
 
                   )
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password1 = serializers.CharField(required=True, write_only=True)
+    new_password2 = serializers.CharField(required=True, write_only=True)
+
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError('Incorrect password')
+        return value
+
+    def validate(self, data):
+        if data['new_password1'] != data['new_password2']:
+            raise serializers.ValidationError('Password are not match')
+        password_validation.validate_password(data['new_password1'], self.context['request'].user)
+        return data
+
+    def save(self, **kwargs):
+        password = self.validated_data['new_password1']
+        user = self.context['request'].user
+        user.set_password(password)
+        user.save()
+        return user
