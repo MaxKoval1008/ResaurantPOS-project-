@@ -13,11 +13,15 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    table = serializers.StringRelatedField
-
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Order
+        model = Product
+        fields = '__all__'
+
+
+class TableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Table
         fields = '__all__'
 
 
@@ -31,33 +35,41 @@ class CookerOrderItemSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'product', 'order', 'start_time', 'count']
 
 
-class WaiterOrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
-    order = serializers.StringRelatedField()
-
-    class Meta:
-        model = OrderItem
-        fields = '__all__'
-        read_only_fields = ['id', 'total_price', 'is_ready']
-
-
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
-    order = serializers.StringRelatedField()
+    product = ProductSerializer
 
     class Meta:
         model = OrderItem
         fields = '__all__'
-        total_cost = serializers.ReadOnlyField()
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
+    table = TableSerializer
+    order_item = OrderItemSerializer(many=True)
+
     class Meta:
-        model = Product
+        model = Order
         fields = '__all__'
 
+    def create(self, validated_data):
+        data = validated_data.pop('order_item')
+        order = Order.objects.create(**validated_data)
+        for order_item_data in data:
+            OrderItem.objects.create(order=order, **order_item_data)
+        return order
 
-class TableSerializer(serializers.ModelSerializer):
+    def update(self, validated_data, **kwargs):
+        data = validated_data.pop('order_item')
+        order = Order.objects.create(**validated_data)
+        for order_item_data in data:
+            OrderItem.objects.create(order=order, **order_item_data)
+        return order
+
+
+class WaiterOrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(many=True)
+    order = OrderSerializer
+
     class Meta:
-        model = Table
+        model = OrderItem
         fields = '__all__'
