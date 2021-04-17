@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 
 class OrderItem(models.Model):
     product = models.ForeignKey(to='pos_label.Product', on_delete=models.CASCADE, related_name='product')

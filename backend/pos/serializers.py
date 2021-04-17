@@ -13,14 +13,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    table = serializers.StringRelatedField
-
-    class Meta:
-        model = Order
-        fields = '__all__'
-
-
 class CookerOrderItemSerializer(serializers.ModelSerializer):
     product = serializers.StringRelatedField(read_only=True)
     order = serializers.StringRelatedField(read_only=True)
@@ -60,3 +52,27 @@ class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = '__all__'
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    table = serializers.StringRelatedField
+    order_item = WaiterOrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+        read_only_fields = ['total_order_cost']
+
+    def create(self, validated_data):
+        data = validated_data.pop('order_item')
+        order = Order.objects.create(**validated_data)
+        for order_item_data in data:
+            OrderItem.objects.create(order=order, **order_item_data)
+        return order
+
+    def update(self, validated_data, **kwargs):
+        data = validated_data.pop('order_item')
+        order = Order.objects.create(**validated_data)
+        for order_item_data in data:
+            OrderItem.objects.create(order=order, **order_item_data)
+        return order
