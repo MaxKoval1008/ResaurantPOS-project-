@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from .table import Table
 
 
 class Order(models.Model):
@@ -13,11 +15,11 @@ class Order(models.Model):
         (DISCOUNT_50, 'PERSONAL')
     ]
 
-    table = models.ForeignKey(to='pos_label.Table', on_delete=models.CASCADE, related_name='table')
+    table = models.ForeignKey(Table, on_delete=models.CASCADE)
     start_time = models.DateTimeField(default=timezone.now)
-    is_active = models.BooleanField(default=True)
-    discount_choice = models.CharField(choices=DISCOUNT, default=None, blank=True, null=True, max_length=3)
-    total_order_cost = models.DecimalField(max_digits=7, decimal_places=2,default=0)
+    is_active = models.BooleanField(default=None)
+    discount_choice = models.CharField(choices=DISCOUNT, max_length=3, default=None, blank=True, null=True)
+    total_order_cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
     def __str__(self):
         return f'Order №{self.pk}'
