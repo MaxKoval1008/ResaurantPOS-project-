@@ -43,9 +43,15 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        exclude = ('order',)
+
+
 class OrderSerializer(serializers.ModelSerializer):
     table = TableSerializer
-    order_item = OrderItemSerializer(many=True)
+    order_item = OrderItemCreateSerializer(many=True)
 
     class Meta:
         model = Order
