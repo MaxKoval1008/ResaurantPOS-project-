@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
             user.role = 2
         elif is_cooker:
             user.role = 3
-        user.set_password(None)
+        user.set_password(password)
         user.save(using=self._db)
 
         return user

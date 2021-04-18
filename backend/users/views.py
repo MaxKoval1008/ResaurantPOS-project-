@@ -9,7 +9,7 @@ from .serializers import UserSerializer, UserUpdateSerializer, ChangePasswordSer
 class UserListCreateView(ListCreateAPIView):
     queryset = CustomUser.objects.all().order_by('is_active')
     serializer_class = UserSerializer
-    permission_classes = [CanGetListUser, IsAdminUser]
+    #permission_classes = [CanGetListUser, IsAdminUser]
     filterset_fields = ['email', 'phone_number']
 
 
