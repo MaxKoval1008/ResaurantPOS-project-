@@ -19,7 +19,6 @@ INSTALLED_APPS = [
     'pos.apps.PosConfig',
     'drf_spectacular',
     'rest_framework',
-    'pos'
 ]
 
 REST_FRAMEWORK = {
@@ -84,7 +83,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
