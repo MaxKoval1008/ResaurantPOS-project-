@@ -13,36 +13,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CookerOrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField(read_only=True)
-    order = serializers.StringRelatedField(read_only=True)
-
-    class Meta:
-        model = OrderItem
-        fields = ['id', 'product', 'order', 'start_time', 'count', 'is_ready']
-        read_only_fields = ['id', 'product', 'order', 'start_time', 'count']
-
-
-class WaiterOrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
-    order = serializers.StringRelatedField()
-
-    class Meta:
-        model = OrderItem
-        fields = '__all__'
-        read_only_fields = ['id', 'total_price', 'is_ready']
-
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    product = serializers.StringRelatedField()
-    order = serializers.StringRelatedField()
-
-    class Meta:
-        model = OrderItem
-        fields = '__all__'
-        total_cost = serializers.ReadOnlyField()
-
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -55,14 +25,38 @@ class TableSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CookerOrderItemSerializer(serializers.ModelSerializer):
+    product = serializers.StringRelatedField(read_only=True)
+    order = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = OrderItem
+        fields = ['id', 'product', 'order', 'start_time', 'count', 'is_ready']
+        read_only_fields = ['id', 'product', 'order', 'start_time', 'count']
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer
+
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+        total_cost = serializers.ReadOnlyField()
+
+
+class OrderItemCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        exclude = ('order',)
+
+
 class OrderSerializer(serializers.ModelSerializer):
-    table = serializers.StringRelatedField
-    order_item = WaiterOrderItemSerializer(many=True)
+    table = TableSerializer
+    order_item = OrderItemCreateSerializer(many=True)
 
     class Meta:
         model = Order
         fields = '__all__'
-        read_only_fields = ['total_order_cost']
 
     def create(self, validated_data):
         data = validated_data.pop('order_item')
@@ -77,3 +71,12 @@ class OrderSerializer(serializers.ModelSerializer):
         for order_item_data in data:
             OrderItem.objects.create(order=order, **order_item_data)
         return order
+
+
+class WaiterOrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(many=True)
+    order = OrderSerializer
+
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
