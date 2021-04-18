@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
-from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -45,7 +42,6 @@ class UserManager(BaseUserManager):
         user = self.create_user(first_name, last_name, email, phone_number, password=password)
         user.is_staff = True
         user.is_superuser = True
-
         user.save(using=self._db)
         return user
 

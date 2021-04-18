@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-1)-d&2682)8-s(2a=vu736u%zbz$dk*mee+&o(tl0au8&5o(j@
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+AUTH_USER_MODEL = 'users.CustomUser'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,9 +19,13 @@ INSTALLED_APPS = [
     'pos.apps.PosConfig',
     'drf_spectacular',
     'rest_framework',
+    'users',
+    'django_filters',
 ]
 
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "restaurantPOS.exception_handler.handle_exception",
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',

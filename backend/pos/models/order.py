@@ -1,14 +1,16 @@
 from django.db import models
-from django.utils import timezone
-from .table import Table
 
+from .table import Table
+import datetime
 
 class Order(models.Model):
-    DISCOUNT_10 = '10%'
-    DISCOUNT_15 = '15%'
-    DISCOUNT_25 = '25%'
-    DISCOUNT_50 = '50%'
+    DISCOUNT_0 = 0
+    DISCOUNT_10 = 10
+    DISCOUNT_15 = 15
+    DISCOUNT_25 = 20
+    DISCOUNT_50 = 25
     DISCOUNT = [
+        (DISCOUNT_0, 'NO DISCOUNT'),
         (DISCOUNT_10, 'PROMO 10'),
         (DISCOUNT_15, 'PROMO 15'),
         (DISCOUNT_25, 'FAVORITE CLIENT'),
@@ -16,10 +18,12 @@ class Order(models.Model):
     ]
 
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
-    start_time = models.DateTimeField(default=timezone.now)
-    is_active = models.BooleanField(default=None)
-    discount_choice = models.CharField(choices=DISCOUNT, max_length=3, default=None, blank=True, null=True)
-    total_order_cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+    start_date = models.DateField(blank=True,null=True)
+    start_time = models.TimeField(blank=True,null=True)
+    is_active = models.BooleanField(default=True)
+    discount_choice = models.PositiveIntegerField('Discount',choices=DISCOUNT, default=0, blank=True, null=True)
+    order_cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
+
 
     def __str__(self):
         return f'Order №{self.pk}'

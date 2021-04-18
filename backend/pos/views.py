@@ -1,139 +1,104 @@
 from rest_framework import mixins
 from rest_framework.generics import (
-    CreateAPIView, DestroyAPIView, UpdateAPIView, ListAPIView,
+    GenericAPIView, UpdateAPIView, ListAPIView, ListCreateAPIView,RetrieveUpdateDestroyAPIView
 )
-
+from .filters import AdminOrderFilter,WaiterOrderFilter, CoockerOrderFilter
 from .models.category import Category
 from .models.order import Order
 from .models.order_item import OrderItem
 from .models.product import Product
 from .models.table import Table
-from .serializers import CategorySerializer, CookerOrderItemSerializer, \
-    WaiterOrderItemSerializer, ProductSerializer, TableSerializer, OrderSerializer, OrderItemSerializer
+from .serializers import CategorySerializer, CookerOrderSerializer, \
+    WaiterOrderSerializer, ProductSerializer, TableSerializer, SingleOrderSerializer, OrderItemSerializer,SingleOrderItemSerializer,OrderNestedSerializer
+
+from django.db.models import Sum
+from rest_framework.response import Response
 
 
-class CategoryCreateView(CreateAPIView):
+class TableListCreateView(ListCreateAPIView):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+
+class TableSingleView(RetrieveUpdateDestroyAPIView):
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+
+class CategoryListCreateView(ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
-class CategoryDeleteView(DestroyAPIView):
+class CategorySingleView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-
-class CategoryUpdateView(UpdateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-
-class CategoryListView(ListAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class ProductListCreateView(ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
-class OrderActiveListView(ListAPIView):
-    queryset = Order.objects.filter(is_active='True').order_by('table')
-    serializer_class = OrderSerializer
+class ProductSingleView(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
-class OrderNotActiveListView(ListAPIView):
-    queryset = Order.objects.filter(is_active='False').order_by('start_time')
-    serializer_class = OrderSerializer
-
-
-class OrderCreateView(CreateAPIView):
+class OrderListCreateView(ListCreateAPIView):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = SingleOrderSerializer
 
 
-class OrderUpdateView(UpdateAPIView):
+class OrderSingleView(RetrieveUpdateDestroyAPIView):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = SingleOrderSerializer
 
 
-class OrderDeleteView(DestroyAPIView):
+class OrderItemListCreateView(ListCreateAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = SingleOrderItemSerializer
+
+class OrderItemSingleView(RetrieveUpdateDestroyAPIView):
+    queryset = OrderItem.objects.all()
+    serializer_class = SingleOrderItemSerializer
+
+
+
+
+class OrderNestedAdminListCreateView(ListCreateAPIView):
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderNestedSerializer
+    filterset_class = AdminOrderFilter
+    def get(self, request,*args,**kwargs):
+        order = Order.objects.all()
+        filterset = AdminOrderFilter(request.GET, queryset=order)
+        if filterset.is_valid():
+            order = filterset.qs
+        serializer = OrderNestedSerializer(order, many=True)
+        total_income = order.aggregate(Sum('order_cost'))['order_cost__sum']
+        return Response({'Total income': total_income if total_income else 0, 'Orders': serializer.data})
 
 
-class OrderItemListView(ListAPIView):
-    queryset = OrderItem.objects.order_by('-start_time')
-    #if waiter:
-    #serializer_class = WaiterSerializer
-    #elif cooker:
-    serializer_class = CookerOrderItemSerializer
+class WaiterOrderNestedListCreateView(ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = WaiterOrderSerializer
+    filterset_class = WaiterOrderFilter
 
 
-class OrderItemReadyListView(ListAPIView):
-    queryset = OrderItem.objects.filter(is_ready='True').order_by('-start_time')
-    #if waiter:
-    #serializer_class = WaiterOrderItemSerializer
-    #elif cooker:
-    serializer_class = CookerOrderItemSerializer
+
+class CookerOrderItemListView(ListAPIView):
+    queryset = OrderItem.objects.all().order_by('is_ready')
+    serializer_class = CookerOrderSerializer
+    filterset_class = CoockerOrderFilter
 
 
-class OrderItemNotReadyListView(ListAPIView):
-    queryset = OrderItem.objects.filter(is_ready='False').order_by('-start_time')
-    #if waiter:
-    #serializer_class = WaiterOrderItemSerializer
-    #elif cooker:
-    serializer_class = CookerOrderItemSerializer
-
-
-class OrderItemUpdateView(UpdateAPIView):
+class CookerOrderItemUpdateView(UpdateAPIView):
     queryset = OrderItem.objects.all()
-    #if waiter:
-    #serializer_class = WaiterOrderItemSerializer
-    #elif cooker:
-    serializer_class = CookerOrderItemSerializer
+    serializer_class = CookerOrderSerializer
 
 
-class OrderItemCreateView(CreateAPIView):
-    queryset = OrderItem.objects.all()
-    serializer_class = WaiterOrderItemSerializer
 
 
-class OrderItemDeleteView(DestroyAPIView):
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
 
 
-class ProductCreateView(CreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
 
-
-class ProductDeleteView(DestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductUpdateView(UpdateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class ProductListView(ListAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
-
-class TableCreateView(CreateAPIView):
-    queryset = Table.objects.all()
-    serializer_class = TableSerializer
-
-
-class TableDeleteView(DestroyAPIView):
-    queryset = Table.objects.all()
-    serializer_class = TableSerializer
-
-
-class TableUpdateView(UpdateAPIView):
-    queryset = Table.objects.all()
-    serializer_class = TableSerializer
-
-
-class TableListView(ListAPIView):
-    queryset = Table.objects.all()
-    serializer_class = TableSerializer
