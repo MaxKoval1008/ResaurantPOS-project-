@@ -1,9 +1,8 @@
 from django.urls import path
 
-from .views import *
-
-app_name = 'pos'
-
+from .views import CategoryListCreateView, CategorySingleView, TableSingleView, TableListCreateView, \
+    ProductListCreateView, ProductSingleView, OrderListCreateView, OrderSingleView, OrderItemListCreateView, \
+    OrderNestedAdminListCreateView, WaiterOrderNestedListCreateView, CookerOrderItemListView, CookerOrderItemUpdateView
 
 urlpatterns = [
     path('category', CategoryListCreateView.as_view()),
@@ -20,7 +19,6 @@ urlpatterns = [
     path('order_item/<int:pk>', OrderSingleView.as_view()),
     path('order_admin', OrderNestedAdminListCreateView.as_view()),
     path('order_waiter', WaiterOrderNestedListCreateView.as_view()),
-
     path('order_cooker', CookerOrderItemListView.as_view()),
     path('order_cooker/<int:pk>', CookerOrderItemUpdateView.as_view())
     ]

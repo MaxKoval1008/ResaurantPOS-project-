@@ -4,7 +4,6 @@ from .models.order import Order
 from .models.order_item import OrderItem
 from .models.product import Product
 from .models.table import Table
-
 from datetime import datetime
 
 
@@ -27,21 +26,23 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    start_time = serializers.TimeField(default=datetime.now().time,format='%H:%M:%S')
+    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
+
     class Meta:
         model = OrderItem
-        fields = ('product','start_date','start_time', 'is_ready')
+        fields = ('product', 'start_date', 'start_time', 'is_ready')
+        read_only_fields = ['is_ready']
 
 
 class OrderNestedSerializer(serializers.ModelSerializer):
     order_item = OrderItemSerializer(many=True)
-    discount_choice = serializers.ChoiceField(choices=[0,10,15,20,25])
-    start_time = serializers.TimeField(default=datetime.now().time,format='%H:%M:%S')
+    discount_choice = serializers.ChoiceField(choices=[0, 10, 15, 20, 25])
+    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
 
     class Meta:
         model = Order
-        fields = ('id','table','start_date', 'start_time', 'is_active', 'order_item','discount_choice')
-        read_only_fields = ['id','order_cost']
+        fields = ('id', 'table', 'start_date', 'start_time', 'is_active', 'order_item', 'discount_choice')
+        read_only_fields = ['id', 'order_cost']
 
     def create(self, validated_data):
         order_items = validated_data.pop('order_item')
@@ -72,6 +73,7 @@ class OrderNestedSerializer(serializers.ModelSerializer):
 
 class SingleOrderSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
+
     class Meta:
         model = Order
         fields = '__all__'
@@ -79,31 +81,25 @@ class SingleOrderSerializer(serializers.ModelSerializer):
 
 class SingleOrderItemSerializer(serializers.ModelSerializer):
     start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
+
     class Meta:
         model = OrderItem
         fields = '__all__'
-
-
-
+        read_only_fields = ['is_ready']
 
 class CookerOrderSerializer(serializers.ModelSerializer):
     product = serializers.StringRelatedField(read_only=True)
 
-
     class Meta:
         model = OrderItem
-        fields = ('id','order', 'product', 'count' ,'start_time','is_ready',)
-        read_only_fields = ('id','order', 'product', 'count' ,'start_time')
-
-
-
+        fields = ('id', 'order', 'product', 'count', 'start_time', 'is_ready',)
+        read_only_fields = ('id', 'order', 'product', 'count', 'start_time')
 
 
 class WaiterOrderSerializer(serializers.ModelSerializer):
-    order_item = SingleOrderItemSerializer(many=True)
+    order_item = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
         fields = '__all__'
-        read_only_fields = ['order_item.is_ready']
-
+        read_only_fields = ['order_item.is_ready', 'order_item.order_item_cost', 'order_cost']

@@ -10,6 +10,6 @@ urlpatterns = [
     path('auth/login', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('main/api/v1/', include('users.urls')),
+    path('user/', include('users.urls')),
     path('main/api/v1/', include('pos.urls')),
 ]
