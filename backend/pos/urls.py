@@ -44,4 +44,5 @@ urlpatterns = [
     path('waiter/order/list/active', OrderActiveListView.as_view()),
     path('waiter/order/list/not_active', OrderNotActiveListView.as_view()),
     path('waiter/order/update/<int:pk>', OrderUpdateView.as_view()),
+    path('administrator/get/statistics', AdminStatisticsView)
     ]

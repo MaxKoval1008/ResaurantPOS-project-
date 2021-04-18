@@ -41,6 +41,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
+        total_cost = serializers.ReadOnlyField()
 
 
 class OrderItemCreateSerializer(serializers.ModelSerializer):
