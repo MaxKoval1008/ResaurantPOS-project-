@@ -13,8 +13,6 @@ urlpatterns = [
     path('product/<int:pk>', ProductSingleView.as_view()),
     path('order', OrderListCreateView.as_view()),
     path('order/<int:pk>', OrderSingleView.as_view()),
-    path('order', OrderListCreateView.as_view()),
-    path('order/<int:pk>', OrderSingleView.as_view()),
     path('order_item', OrderItemListCreateView.as_view()),
     path('order_item/<int:pk>', OrderSingleView.as_view()),
     path('order_admin', OrderNestedAdminListCreateView.as_view()),

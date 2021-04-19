@@ -1,7 +1,6 @@
 from django.db import models
 
 from .table import Table
-import datetime
 
 class Order(models.Model):
     DISCOUNT_0 = 0
@@ -18,10 +17,10 @@ class Order(models.Model):
     ]
 
     table = models.ForeignKey(Table, on_delete=models.CASCADE)
-    start_date = models.DateField(blank=True,null=True)
-    start_time = models.TimeField(blank=True,null=True)
+    start_date = models.DateField(blank=True, null=True)
+    start_time = models.TimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    discount_choice = models.PositiveIntegerField('Discount',choices=DISCOUNT, default=0, blank=True, null=True)
+    discount_choice = models.PositiveIntegerField('Discount', choices=DISCOUNT, default=0, blank=True, null=True)
     order_cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
 
 
