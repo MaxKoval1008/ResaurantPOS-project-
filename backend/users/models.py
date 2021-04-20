@@ -59,7 +59,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     phone_regex = RegexValidator(
         regex=r'^\+?1?\d{9,15}$',
-        message="Phone number should have format '+375296788767'")
+        message="Phone number should have format '+375xxxxxxxxx'")
 
     first_name = models.CharField('Name', max_length=100)
     last_name = models.CharField('Surname', max_length=100)

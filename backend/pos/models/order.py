@@ -1,7 +1,7 @@
+from django.utils.timezone import localtime, localdate
 from django.db import models
-
 from .table import Table
-import datetime
+
 
 class Order(models.Model):
     DISCOUNT_0 = 0
@@ -17,13 +17,14 @@ class Order(models.Model):
         (DISCOUNT_50, 'PERSONAL')
     ]
 
-    table = models.ForeignKey(Table, on_delete=models.CASCADE)
-    start_date = models.DateField(blank=True,null=True)
-    start_time = models.TimeField(blank=True,null=True)
+    table = models.ForeignKey(
+        Table,
+        on_delete=models.CASCADE)
+    start_date = models.DateField(default=localdate, blank=True)
+    start_time = models.TimeField(default=localtime, blank=True)
     is_active = models.BooleanField(default=True)
-    discount_choice = models.PositiveIntegerField('Discount',choices=DISCOUNT, default=0, blank=True, null=True)
+    discount_choice = models.PositiveIntegerField('Discount', choices=DISCOUNT, default=0, blank=True)
     order_cost = models.DecimalField(max_digits=7, decimal_places=2, default=0)
-
 
     def __str__(self):
         return f'Order №{self.pk}'

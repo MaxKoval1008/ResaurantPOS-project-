@@ -9,7 +9,7 @@ from .serializers import UserSerializer, UserUpdateSerializer, ChangePasswordSer
 class UserListCreateView(ListCreateAPIView):
     queryset = CustomUser.objects.all().order_by('is_active')
     serializer_class = UserSerializer
-    #permission_classes = [CanGetListUser, IsAdminUser]
+    permission_classes = [CanGetListUser | IsAdminUser]
     filterset_fields = ['email', 'phone_number']
 
 
@@ -17,7 +17,7 @@ class UserRetrieveDestroyView(RetrieveAPIView, DestroyAPIView):
     lookup_field = 'email'
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser, IsOwnerOrReadOnly]
+    permission_classes = [IsAdminUser | IsOwnerOrReadOnly]
 
 
 class UserUpdateView(UpdateAPIView):
@@ -29,6 +29,7 @@ class UserUpdateView(UpdateAPIView):
 
 class ChangePasswordView(UpdateAPIView):
     serializer_class = ChangePasswordSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
     def update(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

@@ -7,6 +7,7 @@ class IsAdmin(permissions.BasePermission):
         if (request.user.role == 1 or request.user.is_superuser) and request.user.is_active:
             return True
 
+
 class IsWaiter(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -14,11 +15,12 @@ class IsWaiter(permissions.BasePermission):
             return True
 
 
-class IsCoocker(permissions.BasePermission):
+class IsCooker(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.user.role == 3 and request.user.is_active:
             return True
+
 
 class CanGetListUser(permissions.BasePermission):
 

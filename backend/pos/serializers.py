@@ -1,10 +1,10 @@
+from django.utils.timezone import localtime, localdate
 from rest_framework import serializers
 from .models.category import Category
 from .models.order import Order
 from .models.order_item import OrderItem
 from .models.product import Product
 from .models.table import Table
-from datetime import datetime
 
 
 class TableSerializer(serializers.ModelSerializer):
@@ -26,18 +26,15 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
-
     class Meta:
         model = OrderItem
         fields = ('product', 'start_date', 'start_time', 'is_ready')
-        read_only_fields = ['is_ready']
+        read_only_fields = ['order_item_cost']
 
 
 class OrderNestedSerializer(serializers.ModelSerializer):
     order_item = OrderItemSerializer(many=True)
     discount_choice = serializers.ChoiceField(choices=[0, 10, 15, 20, 25])
-    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
 
     class Meta:
         model = Order
@@ -71,23 +68,20 @@ class OrderNestedSerializer(serializers.ModelSerializer):
         return instance
 
 
-class SingleOrderSerializer(serializers.ModelSerializer):
-    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
-
+class OrderSingleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
 
 
-class SingleOrderItemSerializer(serializers.ModelSerializer):
-    start_time = serializers.TimeField(default=datetime.now().time, format='%H:%M:%S')
-
+class OrderItemSingleSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = '__all__'
-        read_only_fields = ['is_ready']
+        read_only_fields = ['is_ready', 'order_item_cost']
 
-class CookerOrderSerializer(serializers.ModelSerializer):
+
+class OrderCookerSerializer(serializers.ModelSerializer):
     product = serializers.StringRelatedField(read_only=True)
 
     class Meta:
@@ -96,8 +90,9 @@ class CookerOrderSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'order', 'product', 'count', 'start_time')
 
 
-class WaiterOrderSerializer(serializers.ModelSerializer):
+class OrderWaiterSerializer(serializers.ModelSerializer):
     order_item = OrderItemSerializer(many=True)
+    discount_choice = serializers.ChoiceField(choices=[0, 10, 15, 20, 25])
 
     class Meta:
         model = Order
