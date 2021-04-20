@@ -1,6 +1,5 @@
 .DS_Store
 .idea/
-.env.dev
 /.env.staging
 /.env.staging.db
 
