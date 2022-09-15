@@ -1,6 +1,5 @@
 .DS_Store
 .idea/
-.env.dev
 /.env.staging
 /.env.staging.db
 
@@ -13,3 +12,7 @@ ENV/
 __pycache__/
 *.py[cod]
 *$py.class
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+/backend/db.sqlite3
